@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-neurolaw}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-neurolaw}
+      POSTGRES_DB: ${POSTGRES_DB:-neurolaw}
+    ports:
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  scripts:
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile
+      target: runtime
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - ./workdir:/workdir
+    command: ["version"]
+
+  orchestrator:
+    build:
+      context: .
+      dockerfile: orchestrator/Dockerfile
+      target: runtime
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://neurolaw:neurolaw@db:5432/neurolaw?sslmode=disable}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      - db
+    volumes:
+      - ./workdir:/workdir
+    command: ["version"]
+
+volumes:
+  db_data:

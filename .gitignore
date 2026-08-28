@@ -1,1 +1,31 @@
+# Environment
+.env
+*.local
 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Go
+/orchestrator/bin/
+*.test
+
+# Runtime/work directories (Factor VI: never assumed persistent)
+/workdir/
+/output/
+
+# Editors/OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Claude Code local state
+.claude/
