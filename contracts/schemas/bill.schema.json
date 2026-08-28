@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://neuro-law-project-traker/contracts/bill.schema.json",
+  "title": "Bill",
+  "description": "Canonical representation of a Projeto de Lei, regardless of origin (Camara or Senado).",
+  "type": "object",
+  "required": [
+    "source",
+    "external_id",
+    "type",
+    "number",
+    "year",
+    "ementa",
+    "presented_date",
+    "url"
+  ],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["camara", "senado"]
+    },
+    "external_id": {
+      "type": "string",
+      "description": "Identifier of this bill in the source API."
+    },
+    "type": {
+      "type": "string",
+      "description": "Bill type/acronym as given by the source (e.g. PL, PEC, PLP)."
+    },
+    "number": {
+      "type": "integer"
+    },
+    "year": {
+      "type": "integer"
+    },
+    "ementa": {
+      "type": "string",
+      "description": "Summary/ementa text of the bill."
+    },
+    "author": {
+      "type": ["string", "null"]
+    },
+    "presented_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "raw_payload": {
+      "type": "object",
+      "description": "Original, unmodified payload from the source API, kept for audit/reprocessing."
+    }
+  },
+  "additionalProperties": false
+}

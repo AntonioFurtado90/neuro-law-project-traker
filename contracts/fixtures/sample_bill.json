@@ -1,0 +1,12 @@
+{
+  "source": "camara",
+  "external_id": "2345678",
+  "type": "PL",
+  "number": 1234,
+  "year": 2026,
+  "ementa": "Altera a Lei no 7.827, de 27 de setembro de 1989, que dispoe sobre o Fundo Constitucional de Financiamento do Norte - FNO.",
+  "author": "Deputado(a) Exemplo",
+  "presented_date": "2026-01-15",
+  "url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2345678",
+  "raw_payload": {}
+}

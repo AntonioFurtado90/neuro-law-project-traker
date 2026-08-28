@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://neuro-law-project-traker/contracts/relevance_report.schema.json",
+  "title": "RelevanceReport",
+  "description": "Output of a relevance-detection subcommand (e.g. detect-relevance), mapping bills to a relevance verdict.",
+  "type": "object",
+  "required": ["method", "results"],
+  "properties": {
+    "method": {
+      "type": "string",
+      "enum": ["keyword", "ml"]
+    },
+    "model_version": {
+      "type": ["string", "null"]
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["bill_external_id", "source", "is_relevant", "matched_keywords"],
+        "properties": {
+          "bill_external_id": { "type": "string" },
+          "source": { "type": "string", "enum": ["camara", "senado"] },
+          "is_relevant": { "type": "boolean" },
+          "matched_keywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "confidence": {
+            "type": ["number", "null"],
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
