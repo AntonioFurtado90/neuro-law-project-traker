@@ -1,0 +1,2 @@
+# Runtime dependencies only. Nothing needed yet at Sprint 0 —
+# API clients (Sprint 2/3) and keyword matching (Sprint 4) will add entries here.

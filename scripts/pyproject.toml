@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neurolaw"
+version = "0.1.0"
+description = "Data ingestion and relevance-detection scripts for the Neuro Law Project Tracker."
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+neurolaw = "neurolaw.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
