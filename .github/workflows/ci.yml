@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  scripts-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build scripts test stage (lint + pytest run during build)
+        run: docker build --target test -f scripts/Dockerfile .
+
+  orchestrator-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build orchestrator build stage (go vet + go test run during build)
+        run: docker build --target build -f orchestrator/Dockerfile .
