@@ -1,5 +1,8 @@
 # Projeto Neuro Law Tracker
 Esse projeto visa criaer um bot/script com o objetivo de ** "Monitorar diariamente projetos de lei apresentados na câmara e no congresso que possam gerar impactos nos Fundos Constitucionais"**.
+**Possiveis sites de pesquisa**: 
+- https://www.camara.leg.br/busca-portal/proposicoes/pesquisa-simplificada
+- https://www12.senado.leg.br/institucional/omv/menu/pesquisas/acompanhamento-legislativo
 ## O Claude deve:
 1. Planejar como o projeto deve ser executado, quais as etapas de cada sprint, a arquitetaura da aplicaçao, etapas e mvp.
 2. Criar o README.md em inglês e e um LEIAME.md em português.
