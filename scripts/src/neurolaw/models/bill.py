@@ -1,7 +1,12 @@
 """Bill mirrors contracts/schemas/bill.schema.json."""
 
+import re
 from dataclasses import dataclass, field
 from typing import Any
+
+# Matches the leading "<tipo> <numero>/<ano>" of a Senado "identificacao"
+# string, e.g. "PL 4874/2026" or "PL 159/2026 (Substitutivo-CD)".
+_SENADO_IDENTIFICACAO_RE = re.compile(r"^(?P<type>\S+)\s+(?P<number>\d+)/(?P<year>\d+)")
 
 
 @dataclass
@@ -46,5 +51,26 @@ class Bill:
             ementa=item["ementa"],
             presented_date=presented_date,
             url=f"https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao={bill_id}",
+            raw_payload=item,
+        )
+
+    @classmethod
+    def from_senado_item(cls, item: dict[str, Any]) -> "Bill":
+        identificacao = item["identificacao"]
+        match = _SENADO_IDENTIFICACAO_RE.match(identificacao)
+        if not match:
+            raise ValueError(f"unrecognized Senado identificacao format: {identificacao!r}")
+
+        codigo_materia = item["codigoMateria"]
+        return cls(
+            source="senado",
+            external_id=str(item["id"]),
+            type=match.group("type"),
+            number=int(match.group("number")),
+            year=int(match.group("year")),
+            ementa=item["ementa"],
+            presented_date=item["dataApresentacao"],
+            url=f"https://www25.senado.leg.br/web/atividade/materias/-/materia/{codigo_materia}",
+            author=item.get("autoria"),
             raw_payload=item,
         )

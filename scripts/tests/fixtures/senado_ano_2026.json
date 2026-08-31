@@ -1,0 +1,58 @@
+[
+  {
+    "autoria": "Senador Davi Alcolumbre (UNIAO/AP)",
+    "casaIdentificadora": "SF",
+    "codigoMateria": 175341,
+    "dataApresentacao": "2026-08-04",
+    "ementa": "Altera as Leis nos 8.248, de 23 de outubro de 1991, e 8.387, de 30 de dezembro de 1991, para regular a destinacao dos investimentos em atividades de pesquisa, desenvolvimento e inovacao devidos como contrapartida dos incentivos da Zona Franca de Manaus e da Lei de Informatica.",
+    "enteIdentificador": "SF",
+    "id": 9090304,
+    "identificacao": "PL 4874/2026",
+    "situacaoAtual": "INCLUIDA NA PAUTA DA REUNIAO",
+    "tipoDocumento": "Projeto de Lei Ordinaria",
+    "tramitando": "Sim",
+    "urlDocumento": "https://legis.senado.gov.br/sdleg-getter/documento?dm=10287865"
+  },
+  {
+    "autoria": "Senador Jaime Bagattoli (PL/RO)",
+    "casaIdentificadora": "SF",
+    "codigoMateria": 175352,
+    "dataApresentacao": "2026-08-05",
+    "ementa": "Altera a Lei no 9.074, de 7 de julho de 1995, que estabelece normas para outorga e prorrogacoes das concessoes e permissoes de servicos publicos, para proibir a concessao de rodovias que especifica.",
+    "enteIdentificador": "SF",
+    "id": 9090882,
+    "identificacao": "PL 4904/2026",
+    "situacaoAtual": "AGUARDANDO DESPACHO",
+    "tipoDocumento": "Projeto de Lei Ordinaria",
+    "tramitando": "Sim",
+    "urlDocumento": "https://legis.senado.gov.br/sdleg-getter/documento?dm=10289035"
+  },
+  {
+    "autoria": "Camara dos Deputados",
+    "casaIdentificadora": "SF",
+    "codigoMateria": 172518,
+    "dataApresentacao": "2025-12-23",
+    "ementa": "Dispoe sobre o exercicio da profissao de tecnico em anatomia, necropsia e tanatopraxia humana.",
+    "enteIdentificador": "SF",
+    "id": 8983465,
+    "identificacao": "PL 199/2026",
+    "situacaoAtual": "AGUARDANDO DESPACHO",
+    "tipoDocumento": "Projeto de Lei Ordinaria",
+    "tramitando": "Sim",
+    "urlDocumento": "https://legis.senado.gov.br/sdleg-getter/documento?dm=10143451"
+  },
+  {
+    "autoria": "Camara dos Deputados",
+    "casaIdentificadora": "SF",
+    "codigoMateria": 172470,
+    "dataApresentacao": "2025-12-23",
+    "ementa": "Determina a realizacao periodica de inspecoes prediais; e cria o Laudo de Inspecao Tecnica de Edificacao (Lite).",
+    "enteIdentificador": "SF",
+    "id": 8983497,
+    "identificacao": "PL 159/2026 (Substitutivo-CD)",
+    "situacaoAtual": "PRONTO PARA DELIBERACAO DO PLENARIO",
+    "tipoDocumento": "Emenda",
+    "tramitando": "Sim",
+    "urlDocumento": "https://legis.senado.gov.br/sdleg-getter/documento?dm=10143481"
+  }
+]

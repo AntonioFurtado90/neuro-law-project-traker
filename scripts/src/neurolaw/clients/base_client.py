@@ -8,10 +8,19 @@ import time
 import urllib.error
 import urllib.request
 from collections.abc import Iterator
+from typing import Any
 
 
 class HTTPError(RuntimeError):
     pass
+
+
+def fetch_json(url: str, *, max_retries: int, backoff_seconds: float) -> Any:
+    """Fetches a single URL with retry/backoff and returns the decoded JSON
+    body as-is (no pagination) — used by APIs that return a flat result,
+    like the Senado "processo" endpoint.
+    """
+    return _fetch_json_with_retry(url, max_retries=max_retries, backoff_seconds=backoff_seconds)
 
 
 def fetch_json_pages(start_url: str, *, max_retries: int, backoff_seconds: float) -> Iterator[dict]:
@@ -26,7 +35,7 @@ def fetch_json_pages(start_url: str, *, max_retries: int, backoff_seconds: float
         url = _next_url(page)
 
 
-def _fetch_json_with_retry(url: str, *, max_retries: int, backoff_seconds: float) -> dict:
+def _fetch_json_with_retry(url: str, *, max_retries: int, backoff_seconds: float) -> Any:
     last_error: Exception | None = None
     for attempt in range(max_retries + 1):
         try:
