@@ -19,3 +19,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build orchestrator build stage (go vet + go test run during build)
         run: docker build --target build -f orchestrator/Dockerfile .
+
+  orchestrator-db-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cp .env.example .env
+      - run: docker compose up -d db
+      - run: docker compose run --rm orchestrator migrate
+      - run: docker compose run --rm orchestrator-integration-tests

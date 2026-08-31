@@ -35,5 +35,16 @@ services:
       - ./workdir:/workdir
     command: ["version"]
 
+  orchestrator-integration-tests:
+    build:
+      context: .
+      dockerfile: orchestrator/Dockerfile
+      target: test-integration
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://neurolaw:neurolaw@db:5432/neurolaw?sslmode=disable}
+    depends_on:
+      - db
+    profiles: ["test"]
+
 volumes:
   db_data:
