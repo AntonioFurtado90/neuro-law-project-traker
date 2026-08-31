@@ -37,6 +37,19 @@ docker compose up -d db
 docker compose run --rm orchestrator migrate
 ```
 
+## Ingesting bills from the Camara
+
+```bash
+RUN_WINDOW_START=2026-08-01 RUN_WINDOW_END=2026-08-05 \
+  docker compose run --rm scripts ingest-camara --output /workdir/camara.json
+docker compose run --rm orchestrator load-bills --input /workdir/camara.json
+```
+
+`ingest-camara` writes an `ingestion_result.json` envelope; `load-bills`
+persists it into Postgres (idempotent — running it again on the same file
+does not create duplicates). This manual two-step flow is what the
+automated pipeline (Sprint 4) will run for you.
+
 ## Running tests
 
 Tests run as part of the Docker build (the `test`/`build` image stages), the

@@ -7,8 +7,12 @@
   `ingestion_runs`, `relevance_results`, `reports`), a hand-rolled migration
   runner (`monitor migrate`), `BillsRepo` with idempotent upserts, Postgres
   wired into `docker-compose.yml` and CI (`orchestrator-db-tests`).
-- **Sprint 2 — Camara ingestion**: `camara_client.py`, `ingest-camara`
-  subcommand, `Bill` model, recorded fixtures, idempotent persistence.
+- **Sprint 2 — Camara ingestion** *(done)*: `camara_client.py` (stdlib
+  `urllib`, no new runtime dependency), `Bill` model, `ingest-camara`
+  subcommand, recorded fixtures, and a `load-bills` orchestrator subcommand
+  that persists an `ingestion_result.json` via `BillsRepo` — the manual
+  stand-in for the automated pipeline `containerexec`/`pipeline.go` will
+  build in Sprint 4.
 - **Sprint 3 — Senado ingestion + unified schema**: same for Senado, plus
   merge/dedupe across sources in the orchestrator.
 - **Sprint 4 — Keyword relevance detection + report**: curated FCO/FNE/FNO
