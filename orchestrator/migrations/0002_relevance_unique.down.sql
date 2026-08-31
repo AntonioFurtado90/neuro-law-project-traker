@@ -1,0 +1,2 @@
+DROP INDEX relevance_results_bill_method_date_idx;
+ALTER TABLE relevance_results DROP COLUMN evaluated_date;

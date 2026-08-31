@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
@@ -54,4 +55,30 @@ func (r *BillsRepo) UpsertBill(ctx context.Context, bill models.Bill) (int64, er
 	}
 
 	return id, nil
+}
+
+// GetBySourceAndExternalID returns the persisted bill for (source, externalID).
+func (r *BillsRepo) GetBySourceAndExternalID(ctx context.Context, source, externalID string) (models.Bill, error) {
+	var bill models.Bill
+	var presentedDate time.Time
+	var rawPayloadJSON []byte
+
+	err := r.pool.QueryRow(ctx, `
+		SELECT source, external_id, type, number, year, ementa, author, presented_date, url, raw_payload
+		FROM bills WHERE source = $1 AND external_id = $2`,
+		source, externalID,
+	).Scan(
+		&bill.Source, &bill.ExternalID, &bill.Type, &bill.Number, &bill.Year,
+		&bill.Ementa, &bill.Author, &presentedDate, &bill.URL, &rawPayloadJSON,
+	)
+	if err != nil {
+		return models.Bill{}, fmt.Errorf("getting bill %s/%s: %w", source, externalID, err)
+	}
+
+	bill.PresentedDate = presentedDate.Format("2006-01-02")
+	if err := json.Unmarshal(rawPayloadJSON, &bill.RawPayload); err != nil {
+		return models.Bill{}, fmt.Errorf("unmarshaling raw_payload for bill %s/%s: %w", source, externalID, err)
+	}
+
+	return bill, nil
 }

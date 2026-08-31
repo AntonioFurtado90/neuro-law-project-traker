@@ -87,3 +87,55 @@ func TestUpsertBill_IsIdempotentOnSourceAndExternalID(t *testing.T) {
 		t.Fatalf("expected ementa to be updated to %q, got %q", second.Ementa, ementa)
 	}
 }
+
+func TestBillsRepo_GetBySourceAndExternalID(t *testing.T) {
+	pool := setupTestPool(t)
+	repo := NewBillsRepo(pool)
+	ctx := context.Background()
+
+	author := "Deputado(a) Exemplo"
+	original := models.Bill{
+		Source:        "camara",
+		ExternalID:    "test-get-1",
+		Type:          "PL",
+		Number:        42,
+		Year:          2026,
+		Ementa:        "Ementa de teste para GetBySourceAndExternalID.",
+		Author:        &author,
+		PresentedDate: "2026-03-15",
+		URL:           "https://example.org/42",
+		RawPayload:    map[string]any{"foo": "bar"},
+	}
+	if _, err := repo.UpsertBill(ctx, original); err != nil {
+		t.Fatalf("upserting bill: %v", err)
+	}
+
+	got, err := repo.GetBySourceAndExternalID(ctx, original.Source, original.ExternalID)
+	if err != nil {
+		t.Fatalf("GetBySourceAndExternalID: %v", err)
+	}
+
+	if got.Ementa != original.Ementa {
+		t.Fatalf("expected ementa %q, got %q", original.Ementa, got.Ementa)
+	}
+	if got.PresentedDate != original.PresentedDate {
+		t.Fatalf("expected presented_date %q, got %q", original.PresentedDate, got.PresentedDate)
+	}
+	if got.Author == nil || *got.Author != author {
+		t.Fatalf("expected author %q, got %v", author, got.Author)
+	}
+	if got.RawPayload["foo"] != "bar" {
+		t.Fatalf("expected raw_payload to round-trip, got %v", got.RawPayload)
+	}
+}
+
+func TestBillsRepo_GetBySourceAndExternalID_NotFound(t *testing.T) {
+	pool := setupTestPool(t)
+	repo := NewBillsRepo(pool)
+	ctx := context.Background()
+
+	_, err := repo.GetBySourceAndExternalID(ctx, "camara", "does-not-exist")
+	if err == nil {
+		t.Fatal("expected an error for a bill that does not exist")
+	}
+}
