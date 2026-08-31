@@ -23,6 +23,7 @@ services:
       SENADO_BILL_TYPE: ${SENADO_BILL_TYPE:-PL}
       RUN_WINDOW_START: ${RUN_WINDOW_START:-}
       RUN_WINDOW_END: ${RUN_WINDOW_END:-}
+      KEYWORD_LIST_PATH: ${KEYWORD_LIST_PATH:-scripts/src/neurolaw/relevance/keyword_list.yaml}
       HTTP_MAX_RETRIES: ${HTTP_MAX_RETRIES:-3}
       HTTP_BACKOFF_SECONDS: ${HTTP_BACKOFF_SECONDS:-2}
     volumes:
@@ -36,11 +37,14 @@ services:
       target: runtime
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://neurolaw:neurolaw@db:5432/neurolaw?sslmode=disable}
+      RUN_WINDOW_END: ${RUN_WINDOW_END:-}
+      OUTPUT_DIR: ${OUTPUT_DIR:-/output}
       LOG_LEVEL: ${LOG_LEVEL:-info}
     depends_on:
       - db
     volumes:
       - ./workdir:/workdir
+      - ./output:/output
     command: ["version"]
 
   orchestrator-integration-tests:

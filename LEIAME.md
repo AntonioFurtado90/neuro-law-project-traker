@@ -38,23 +38,31 @@ docker compose up -d db
 docker compose run --rm orchestrator migrate
 ```
 
-## Ingerindo PLs da Câmara e do Senado
+## Rodando a pipeline completa
 
 ```bash
-RUN_WINDOW_START=2026-08-01 RUN_WINDOW_END=2026-08-05 \
-  docker compose run --rm scripts ingest-camara --output /workdir/camara.json
-docker compose run --rm orchestrator load-bills --input /workdir/camara.json
-
-RUN_WINDOW_START=2026-08-01 RUN_WINDOW_END=2026-08-05 \
-  docker compose run --rm scripts ingest-senado --output /workdir/senado.json
-docker compose run --rm orchestrator load-bills --input /workdir/senado.json
+RUN_WINDOW_START=2026-08-01 RUN_WINDOW_END=2026-08-05 ./bin/run-pipeline.sh
 ```
 
-Cada subcomando `ingest-*` escreve um envelope `ingestion_result.json`;
-`load-bills` persiste isso no Postgres (idempotente — rodar de novo com o
-mesmo arquivo não cria duplicatas) e é agnóstico de fonte, então o mesmo
-comando carrega qualquer uma das duas. Esse fluxo manual é o que a pipeline
-automatizada (Sprint 4) vai rodar sozinha.
+Isso ingere as duas fontes, persiste os PLs, roda a detecção de relevância
+por palavras-chave e escreve um relatório em Markdown em
+`./output/report-<data>.md` — idempotente de ponta a ponta (pode rodar de
+novo para a mesma janela sem duplicar, só atualiza). Cada etapa também roda
+isolada:
+
+```bash
+docker compose run --rm scripts ingest-camara --output /workdir/camara.json
+docker compose run --rm orchestrator load-bills --input /workdir/camara.json
+docker compose run --rm scripts detect-relevance --input /workdir/camara.json --output /workdir/camara_relevance.json
+docker compose run --rm orchestrator generate-report --input /workdir/camara_relevance.json
+```
+
+`ingest-*` e `detect-relevance` escrevem envelopes JSON (veja
+[`docs/contract.md`](docs/contract.md)); `load-bills` e `generate-report`
+são agnósticos de fonte, então os mesmos comandos funcionam com a saída do
+`ingest-senado` também. Veja [`docs/architecture.md`](docs/architecture.md)
+para entender por que o sequenciamento fica num script de shell e não
+dentro do orquestrador Go.
 
 ## Rodando os testes
 

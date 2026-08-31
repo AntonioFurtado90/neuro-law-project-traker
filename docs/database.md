@@ -26,6 +26,11 @@ Tables created by `0001_init.up.sql`:
   failures.
 - **`relevance_results`** — relevance verdicts per bill; `method` is
   `keyword` today, `ml` once Phase B ships, without a schema change.
+  `0002_relevance_unique.up.sql` adds an `evaluated_date` column and a
+  `UNIQUE(bill_id, method, evaluated_date)` index so re-running detection
+  the same day updates in place instead of duplicating (a plain column is
+  used rather than an index on `evaluated_at::date`, since that cast is not
+  IMMUTABLE and Postgres refuses to index it).
 - **`reports`** — history of what was actually reported/notified.
 - **`labels`** (reserved) — supervised-learning labels for the future ML
   sprint; not created until the labeling strategy is decided.
