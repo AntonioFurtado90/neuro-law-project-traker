@@ -20,6 +20,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ingest_camara_parser.add_argument("--output", required=True, help="Path to write the ingestion_result JSON to.")
 
+    ingest_senado_parser = subparsers.add_parser("ingest-senado", help="Fetch bills from the Senado Federal API.")
+    ingest_senado_parser.add_argument("--output", required=True, help="Path to write the ingestion_result JSON to.")
+
     return parser
 
 
@@ -35,6 +38,11 @@ def main(argv: list[str] | None = None) -> int:
         from neurolaw.ingestion.ingest_camara import run as ingest_camara_run
 
         return ingest_camara_run(args.output)
+
+    if args.command == "ingest-senado":
+        from neurolaw.ingestion.ingest_senado import run as ingest_senado_run
+
+        return ingest_senado_run(args.output)
 
     parser.error(f"Unknown command: {args.command}")
     return 2
