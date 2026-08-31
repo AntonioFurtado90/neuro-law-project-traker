@@ -1,0 +1,14 @@
+# Curated terms used to flag a bill as potentially impacting the Fundos
+# Constitucionais (FCO, FNE, FNO — Art. 159 of the Constitution).
+# Matching is case-insensitive; see relevance/keywords.py.
+- "Fundo Constitucional de Financiamento"
+- "Fundo Constitucional"
+- "FCO"
+- "FNE"
+- "FNO"
+- "fundo de financiamento do Centro-Oeste"
+- "fundo de financiamento do Nordeste"
+- "fundo de financiamento do Norte"
+- "fundos de financiamento regional"
+- "Banco do Nordeste"
+- "Banco da Amazônia"

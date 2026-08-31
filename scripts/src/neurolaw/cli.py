@@ -23,6 +23,12 @@ def build_parser() -> argparse.ArgumentParser:
     ingest_senado_parser = subparsers.add_parser("ingest-senado", help="Fetch bills from the Senado Federal API.")
     ingest_senado_parser.add_argument("--output", required=True, help="Path to write the ingestion_result JSON to.")
 
+    detect_relevance_parser = subparsers.add_parser(
+        "detect-relevance", help="Flag bills whose ementa matches the curated keyword list."
+    )
+    detect_relevance_parser.add_argument("--input", required=True, help="Path to an ingestion_result JSON file.")
+    detect_relevance_parser.add_argument("--output", required=True, help="Path to write the relevance_report JSON to.")
+
     return parser
 
 
@@ -43,6 +49,11 @@ def main(argv: list[str] | None = None) -> int:
         from neurolaw.ingestion.ingest_senado import run as ingest_senado_run
 
         return ingest_senado_run(args.output)
+
+    if args.command == "detect-relevance":
+        from neurolaw.relevance.detect_relevance import run as detect_relevance_run
+
+        return detect_relevance_run(args.input, args.output)
 
     parser.error(f"Unknown command: {args.command}")
     return 2
