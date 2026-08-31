@@ -52,3 +52,23 @@ func TestRun_Migrate_WithoutDatabaseURL_FailsFast(t *testing.T) {
 		t.Fatal("expected an error message explaining the missing config")
 	}
 }
+
+func TestRun_LoadBills_RequiresInputFlag(t *testing.T) {
+	var out bytes.Buffer
+
+	code := run(context.Background(), []string{"load-bills"}, &out)
+
+	if code == 0 {
+		t.Fatal("expected non-zero exit code when --input is missing")
+	}
+}
+
+func TestRun_LoadBills_MissingFile_ReturnsConfigError(t *testing.T) {
+	var out bytes.Buffer
+
+	code := run(context.Background(), []string{"load-bills", "--input", "/no/such/file.json"}, &out)
+
+	if code != 2 {
+		t.Fatalf("expected exit code 2 for a missing input file, got %d", code)
+	}
+}
