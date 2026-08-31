@@ -1,10 +1,12 @@
 # Roadmap
 
-- **Sprint 0 — Scaffolding, CI and Docker** *(current)*: directory skeleton,
+- **Sprint 0 — Scaffolding, CI and Docker** *(done)*: directory skeleton,
   multi-stage Dockerfiles for `scripts`/`orchestrator`, `docker-compose.yml`
   bringing up all three containers, `ci.yml`, `.env.example`.
-- **Sprint 1 — Database**: `0001_init` migration, `internal/db` repositories,
-  Postgres wired into `docker-compose.yml` and CI.
+- **Sprint 1 — Database** *(done)*: `0001_init` migration (`bills`,
+  `ingestion_runs`, `relevance_results`, `reports`), a hand-rolled migration
+  runner (`monitor migrate`), `BillsRepo` with idempotent upserts, Postgres
+  wired into `docker-compose.yml` and CI (`orchestrator-db-tests`).
 - **Sprint 2 — Camara ingestion**: `camara_client.py`, `ingest-camara`
   subcommand, `Bill` model, recorded fixtures, idempotent persistence.
 - **Sprint 3 — Senado ingestion + unified schema**: same for Senado, plus

@@ -2,11 +2,23 @@
 
 Postgres, owned exclusively by `orchestrator` (scripts never connect to it
 directly). Schema is managed by plain SQL migrations in
-`orchestrator/migrations/` (introduced in Sprint 1), applied as a one-off
-administrative process (Factor XII) — never automatically at container
-startup.
+`orchestrator/migrations/`, applied via a small hand-rolled runner
+(`orchestrator/internal/db.Migrate`, ~80 lines on top of `pgx`) rather than a
+migration framework — the only requirement is applying `*.up.sql` files in
+order, once, so a full library would be an extra dependency for no real
+benefit. Applied filenames are tracked in a `schema_migrations` table;
+`.down.sql` files exist for manual rollback via `psql` but are not executed
+automatically.
 
-Planned tables (see the project plan for full column lists):
+Migrations run as a one-off administrative process (Factor XII) — never
+automatically at container startup:
+
+```bash
+docker compose up -d db
+docker compose run --rm orchestrator migrate
+```
+
+Tables created by `0001_init.up.sql`:
 
 - **`bills`** — canonical bill records, `UNIQUE(source, external_id)` for
   idempotent re-ingestion.

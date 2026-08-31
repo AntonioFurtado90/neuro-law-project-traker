@@ -33,6 +33,8 @@ cp .env.example .env
 docker compose build
 docker compose run --rm scripts version
 docker compose run --rm orchestrator version
+docker compose up -d db
+docker compose run --rm orchestrator migrate
 ```
 
 ## Running tests
@@ -43,6 +45,15 @@ same way CI runs them:
 ```bash
 docker build --target test -f scripts/Dockerfile .
 docker build --target build -f orchestrator/Dockerfile .
+```
+
+Database-backed tests need a running Postgres and run separately (also how
+CI's `orchestrator-db-tests` job runs them):
+
+```bash
+docker compose up -d db
+docker compose run --rm orchestrator migrate
+docker compose run --rm orchestrator-integration-tests
 ```
 
 ## Engineering practices

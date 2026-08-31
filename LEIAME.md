@@ -34,6 +34,8 @@ cp .env.example .env
 docker compose build
 docker compose run --rm scripts version
 docker compose run --rm orchestrator version
+docker compose up -d db
+docker compose run --rm orchestrator migrate
 ```
 
 ## Rodando os testes
@@ -44,6 +46,16 @@ Os testes rodam como parte do build das imagens Docker (estágios
 ```bash
 docker build --target test -f scripts/Dockerfile .
 docker build --target build -f orchestrator/Dockerfile .
+```
+
+Os testes que dependem do banco precisam de um Postgres rodando e são
+executados à parte (é assim também que o job `orchestrator-db-tests` do CI
+roda):
+
+```bash
+docker compose up -d db
+docker compose run --rm orchestrator migrate
+docker compose run --rm orchestrator-integration-tests
 ```
 
 ## Práticas de engenharia
