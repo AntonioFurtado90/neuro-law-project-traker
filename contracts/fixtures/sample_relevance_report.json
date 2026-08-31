@@ -1,0 +1,13 @@
+{
+  "method": "keyword",
+  "model_version": null,
+  "results": [
+    {
+      "bill_external_id": "2345678",
+      "source": "camara",
+      "is_relevant": true,
+      "matched_keywords": ["FNO"],
+      "confidence": null
+    }
+  ]
+}
