@@ -20,6 +20,7 @@ services:
       CAMARA_API_BASE_URL: ${CAMARA_API_BASE_URL:-https://dadosabertos.camara.leg.br/api/v2}
       SENADO_API_BASE_URL: ${SENADO_API_BASE_URL:-https://legis.senado.leg.br/dadosabertos}
       CAMARA_BILL_TYPE: ${CAMARA_BILL_TYPE:-PL}
+      SENADO_BILL_TYPE: ${SENADO_BILL_TYPE:-PL}
       RUN_WINDOW_START: ${RUN_WINDOW_START:-}
       RUN_WINDOW_END: ${RUN_WINDOW_END:-}
       HTTP_MAX_RETRIES: ${HTTP_MAX_RETRIES:-3}

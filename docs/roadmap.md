@@ -13,8 +13,13 @@
   that persists an `ingestion_result.json` via `BillsRepo` — the manual
   stand-in for the automated pipeline `containerexec`/`pipeline.go` will
   build in Sprint 4.
-- **Sprint 3 — Senado ingestion + unified schema**: same for Senado, plus
-  merge/dedupe across sources in the orchestrator.
+- **Sprint 3 — Senado ingestion** *(done)*: `senado_client.py` against the
+  `/processo` endpoint (the older `/materia/pesquisa/lista` is officially
+  deprecated) — filters reliably by year/type only, so date-window filtering
+  happens client-side; `Bill.from_senado_item`, `ingest-senado` subcommand.
+  No orchestrator changes needed: `bills`/`bill.schema.json` already model
+  `source` as `camara`/`senado` since Sprint 0/1, so `load-bills` persists
+  either source unchanged, with no merge/dedupe step required.
 - **Sprint 4 — Keyword relevance detection + report**: curated FCO/FNE/FNO
   keyword list, `detect-relevance` subcommand, full pipeline wiring through
   containers, `FileSink`.

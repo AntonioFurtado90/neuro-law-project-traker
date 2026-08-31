@@ -37,18 +37,23 @@ docker compose up -d db
 docker compose run --rm orchestrator migrate
 ```
 
-## Ingesting bills from the Camara
+## Ingesting bills from the Camara and the Senado
 
 ```bash
 RUN_WINDOW_START=2026-08-01 RUN_WINDOW_END=2026-08-05 \
   docker compose run --rm scripts ingest-camara --output /workdir/camara.json
 docker compose run --rm orchestrator load-bills --input /workdir/camara.json
+
+RUN_WINDOW_START=2026-08-01 RUN_WINDOW_END=2026-08-05 \
+  docker compose run --rm scripts ingest-senado --output /workdir/senado.json
+docker compose run --rm orchestrator load-bills --input /workdir/senado.json
 ```
 
-`ingest-camara` writes an `ingestion_result.json` envelope; `load-bills`
-persists it into Postgres (idempotent — running it again on the same file
-does not create duplicates). This manual two-step flow is what the
-automated pipeline (Sprint 4) will run for you.
+Each `ingest-*` subcommand writes an `ingestion_result.json` envelope;
+`load-bills` persists it into Postgres (idempotent — running it again on the
+same file does not create duplicates) and is source-agnostic, so the same
+command loads either source. This manual flow is what the automated
+pipeline (Sprint 4) will run for you.
 
 ## Running tests
 
