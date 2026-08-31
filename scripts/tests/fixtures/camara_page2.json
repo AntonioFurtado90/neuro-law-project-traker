@@ -1,0 +1,24 @@
+{
+  "dados": [
+    {
+      "id": 2642095,
+      "uri": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/2642095",
+      "siglaTipo": "PL",
+      "codTipo": 139,
+      "numero": 4909,
+      "ano": 2026,
+      "ementa": "Dispoe sobre a extincao do vinculo de filiacao e a perda do direito a alimentos em razao de abandono afetivo grave.",
+      "dataApresentacao": "2026-08-05T21:47"
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "href": "https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=PL&dataApresentacaoInicio=2026-08-01&dataApresentacaoFim=2026-08-05&itens=2&pagina=2&ordem=ASC&ordenarPor=id"
+    },
+    {
+      "rel": "previous",
+      "href": "https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=PL&dataApresentacaoInicio=2026-08-01&dataApresentacaoFim=2026-08-05&itens=2&pagina=1&ordem=ASC&ordenarPor=id"
+    }
+  ]
+}
