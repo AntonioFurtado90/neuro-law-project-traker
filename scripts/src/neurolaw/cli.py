@@ -1,8 +1,7 @@
 """Single CLI entrypoint for the neurolaw scripts container.
 
 Subcommands are added incrementally, one per sprint (ingest-camara,
-ingest-senado, detect-relevance, ...). Sprint 0 only wires the dispatcher
-itself so the container and CI pipeline have something real to build/run.
+ingest-senado, detect-relevance, ...).
 """
 
 import argparse
@@ -15,6 +14,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="neurolaw")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("version", help="Print the neurolaw package version.")
+
+    ingest_camara_parser = subparsers.add_parser(
+        "ingest-camara", help="Fetch bills from the Camara dos Deputados API."
+    )
+    ingest_camara_parser.add_argument("--output", required=True, help="Path to write the ingestion_result JSON to.")
+
     return parser
 
 
@@ -25,6 +30,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "version":
         print(__version__)
         return 0
+
+    if args.command == "ingest-camara":
+        from neurolaw.ingestion.ingest_camara import run as ingest_camara_run
+
+        return ingest_camara_run(args.output)
 
     parser.error(f"Unknown command: {args.command}")
     return 2
