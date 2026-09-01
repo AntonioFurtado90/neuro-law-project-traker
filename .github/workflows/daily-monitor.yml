@@ -1,0 +1,30 @@
+name: Daily Monitor
+
+on:
+  schedule:
+    - cron: "0 12 * * *" # 12:00 UTC = 09:00 America/Sao_Paulo (no DST in Brazil since 2019)
+  workflow_dispatch:
+    inputs:
+      run_window_start:
+        description: "Override RUN_WINDOW_START (YYYY-MM-DD, optional)"
+        required: false
+      run_window_end:
+        description: "Override RUN_WINDOW_END (YYYY-MM-DD, optional)"
+        required: false
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      RUN_WINDOW_START: ${{ github.event.inputs.run_window_start }}
+      RUN_WINDOW_END: ${{ github.event.inputs.run_window_end }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./bin/run-pipeline.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-${{ github.run_id }}
+          path: output/
+          if-no-files-found: warn
