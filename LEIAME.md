@@ -41,14 +41,23 @@ docker compose run --rm orchestrator migrate
 ## Rodando a pipeline completa
 
 ```bash
+./bin/run-pipeline.sh
+```
+
+Sem `RUN_WINDOW_START`/`RUN_WINDOW_END` definidos, a janela é calculada
+automaticamente (`monitor run-window`: os 2 dias terminando ontem, no fuso
+`America/Sao_Paulo`) — é isso que o cron diário roda sozinho. Para
+reprocessar uma janela específica, defina os dois:
+
+```bash
 RUN_WINDOW_START=2026-08-01 RUN_WINDOW_END=2026-08-05 ./bin/run-pipeline.sh
 ```
 
-Isso ingere as duas fontes, persiste os PLs, roda a detecção de relevância
-por palavras-chave e escreve um relatório em Markdown em
-`./output/report-<data>.md` — idempotente de ponta a ponta (pode rodar de
-novo para a mesma janela sem duplicar, só atualiza). Cada etapa também roda
-isolada:
+De qualquer forma, isso ingere as duas fontes, persiste os PLs, roda a
+detecção de relevância por palavras-chave e escreve um relatório em
+Markdown em `./output/report-<data>.md` — idempotente de ponta a ponta
+(pode rodar de novo para a mesma janela sem duplicar, só atualiza). Cada
+etapa também roda isolada:
 
 ```bash
 docker compose run --rm scripts ingest-camara --output /workdir/camara.json
@@ -63,6 +72,18 @@ são agnósticos de fonte, então os mesmos comandos funcionam com a saída do
 `ingest-senado` também. Veja [`docs/architecture.md`](docs/architecture.md)
 para entender por que o sequenciamento fica num script de shell e não
 dentro do orquestrador Go.
+
+## Configurando o cron diário
+
+[`.github/workflows/daily-monitor.yml`](.github/workflows/daily-monitor.yml)
+roda `bin/run-pipeline.sh` todo dia (e sob demanda via `workflow_dispatch`,
+com override opcional da janela de datas), subindo o relatório como
+artifact do build. Ele espera um secret `DATABASE_URL` no repositório
+apontando pra um Postgres gerenciado — o runner do GitHub Actions é
+efêmero, então o Postgres de produção não pode ser o container `db` local.
+Veja [`docs/database.md`](docs/database.md) → "Provisionando o banco de
+produção" pra criar um (Neon/Supabase/Railway funcionam) e adicionar o
+secret.
 
 ## Rodando os testes
 

@@ -29,9 +29,20 @@
   this is a shell script and not a Go-side `containerexec`. A new migration
   (`0002_relevance_unique`) makes relevance recording idempotent per
   bill/method/day, same as bills already were.
-- **Sprint 5 — Daily cron on GitHub Actions**: `daily-monitor.yml`, run-window
-  computation, managed Postgres configured, artifact upload,
-  `workflow_dispatch` for one-off runs.
+- **Sprint 5 — Daily cron on GitHub Actions** *(done, pending user setup)*:
+  `monitor run-window` computes a 2-day overlapping window (resilient to one
+  missed run, since everything downstream is idempotent) in
+  `America/Sao_Paulo` — the runtime image embeds `time/tzdata` since
+  distroless has no `/usr/share/zoneinfo`. `bin/run-pipeline.sh` now
+  auto-computes the window when `RUN_WINDOW_START`/`END` aren't set.
+  `daily-monitor.yml` runs it on a daily schedule (`workflow_dispatch` too,
+  with optional date overrides) and uploads `output/` as an artifact. No
+  `db` service is started in CI — production Postgres is external/managed,
+  same as the architecture always intended. **Not yet running for real**:
+  the user hasn't provisioned a managed Postgres or pushed to `origin/main`
+  yet (see `docs/database.md` → "Provisioning the production database"),
+  so the schedule/secret haven't been exercised on GitHub itself — only
+  verified locally by simulating the exact commands the workflow runs.
 - **Sprint 6+ (future) — Notification**: a real `Sink` implementation
   (email/Telegram/Slack) once the channel is decided.
 - **Sprint 7+ (future, explicitly separate) — ML (Phase B)**: decide the

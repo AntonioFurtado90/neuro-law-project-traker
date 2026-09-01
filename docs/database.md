@@ -41,3 +41,28 @@ ephemeral and cannot host a persistent database container between scheduled
 runs. In development, `docker-compose.yml` runs a local `postgres:16-alpine`
 container instead — same schema, same migrations, same `DATABASE_URL`
 mechanism (Factor X: dev/prod parity).
+
+## Provisioning the production database
+
+`daily-monitor.yml` (see `docs/roadmap.md`, Sprint 5) reads `DATABASE_URL`
+from a GitHub Actions secret — it does not start a `db` container itself,
+since production Postgres must outlive the ephemeral runner. To set it up:
+
+1. Create a free Postgres instance on [Neon](https://neon.tech),
+   [Supabase](https://supabase.com), or [Railway](https://railway.app) —
+   any of the three works, none are wired in code-side, it's just a
+   connection string.
+2. Copy the connection string the provider gives you. Managed providers
+   require TLS, so it will look like
+   `postgres://user:pass@host/dbname?sslmode=require` — note this differs
+   from the local dev default (`?sslmode=disable`, since the compose `db`
+   container has no TLS listener).
+3. In the GitHub repo, go to **Settings → Secrets and variables → Actions**
+   and add a repository secret named `DATABASE_URL` with that connection
+   string.
+4. Run `orchestrator migrate` once against it before the first scheduled
+   run — either trigger `daily-monitor.yml` manually via
+   **Actions → Daily Monitor → Run workflow** (it runs `migrate` as the
+   first step of `bin/run-pipeline.sh` automatically), or run
+   `DATABASE_URL=<connection string> docker compose run --rm orchestrator migrate`
+   from a machine with Docker, pointed at the same secret value.

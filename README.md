@@ -40,13 +40,23 @@ docker compose run --rm orchestrator migrate
 ## Running the full pipeline
 
 ```bash
+./bin/run-pipeline.sh
+```
+
+With no `RUN_WINDOW_START`/`RUN_WINDOW_END` set, the window is computed
+automatically (`monitor run-window`: the 2 days ending yesterday, in
+`America/Sao_Paulo`) — this is what the daily cron runs unattended. Set
+both explicitly to reprocess a specific window instead:
+
+```bash
 RUN_WINDOW_START=2026-08-01 RUN_WINDOW_END=2026-08-05 ./bin/run-pipeline.sh
 ```
 
-This ingests both sources, persists the bills, runs keyword-based relevance
-detection, and writes a Markdown report to `./output/report-<date>.md` —
-idempotent end to end (safe to re-run for the same window; it updates
-instead of duplicating). Each step is also runnable on its own:
+Either way it ingests both sources, persists the bills, runs keyword-based
+relevance detection, and writes a Markdown report to
+`./output/report-<date>.md` — idempotent end to end (safe to re-run for the
+same window; it updates instead of duplicating). Each step is also runnable
+on its own:
 
 ```bash
 docker compose run --rm scripts ingest-camara --output /workdir/camara.json
@@ -60,6 +70,18 @@ docker compose run --rm orchestrator generate-report --input /workdir/camara_rel
 are source-agnostic, so the same commands work for `ingest-senado`'s output
 too. See [`docs/architecture.md`](docs/architecture.md) for why sequencing
 lives in a shell script rather than inside the Go orchestrator.
+
+## Setting up the daily cron
+
+[`.github/workflows/daily-monitor.yml`](.github/workflows/daily-monitor.yml)
+runs `bin/run-pipeline.sh` daily (and on-demand via `workflow_dispatch`,
+with optional date overrides), uploading the report as a build artifact.
+It expects a `DATABASE_URL` repository secret pointing at a managed Postgres
+instance — GitHub Actions runners are ephemeral, so production Postgres
+can't be the local `db` container. See
+[`docs/database.md`](docs/database.md) → "Provisioning the production
+database" for how to create one (Neon/Supabase/Railway all work) and add
+the secret.
 
 ## Running tests
 
