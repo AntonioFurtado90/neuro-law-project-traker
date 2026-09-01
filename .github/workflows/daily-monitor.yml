@@ -26,5 +26,7 @@ jobs:
         if: always()
         with:
           name: report-${{ github.run_id }}
-          path: output/
+          path: |
+            output/
+            logs/
           if-no-files-found: warn

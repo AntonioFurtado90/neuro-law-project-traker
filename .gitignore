@@ -21,6 +21,10 @@ htmlcov/
 /workdir/
 /output/
 
+# Execution log, host-only (Factor XI: the app itself only writes to stdout;
+# this is the external orchestration script capturing it to disk)
+/logs/
+
 # Editors/OS
 .vscode/
 .idea/
