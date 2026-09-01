@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	_ "time/tzdata" // embeds the IANA zoneinfo database; the distroless runtime image has none.
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
@@ -25,7 +26,7 @@ const version = "0.1.0"
 
 func run(ctx context.Context, args []string, stdout io.Writer) int {
 	if len(args) == 0 {
-		fmt.Fprintln(stdout, "usage: monitor <version|migrate|load-bills|generate-report>")
+		fmt.Fprintln(stdout, "usage: monitor <version|migrate|load-bills|generate-report|run-window>")
 		return 2
 	}
 
@@ -39,6 +40,8 @@ func run(ctx context.Context, args []string, stdout io.Writer) int {
 		return runLoadBills(ctx, args[1:], stdout)
 	case "generate-report":
 		return runGenerateReport(ctx, args[1:], stdout)
+	case "run-window":
+		return runRunWindow(args[1:], stdout)
 	default:
 		fmt.Fprintf(stdout, "unknown command: %s\n", args[0])
 		return 2
